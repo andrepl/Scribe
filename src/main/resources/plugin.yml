@@ -1,0 +1,4 @@
+main: com.norcode.bukkit.scribe.Scribe
+author: metalhedd
+version: 0.0.1
+name: Scribe
