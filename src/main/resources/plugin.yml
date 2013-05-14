@@ -1,4 +1,17 @@
 main: com.norcode.bukkit.scribe.Scribe
 author: metalhedd
-version: 0.0.1
+version: 0.0.2
 name: Scribe
+
+commands:
+  scribe reload:
+    description: Reload Scribe config file.
+    permission: scribe.admin
+
+permissions:
+  scribe.use:
+    description: Allows usage of Scribe
+    default: op
+  scribe.admin:
+    description: Allows reloading Scribe's config file.
+    default: op

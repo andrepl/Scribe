@@ -14,7 +14,10 @@ import net.minecraft.server.v1_5_R3.ContainerAnvil;
 import net.minecraft.server.v1_5_R3.ContainerAnvilInventory;
 import net.minecraft.server.v1_5_R3.EnchantmentManager;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_5_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_5_R3.inventory.CraftInventoryAnvil;
@@ -71,13 +74,29 @@ public class Scribe extends JavaPlugin implements Listener {
         }
     }
 
+    public void debug(String s) {
+        if (getConfig().getBoolean("debug", false)) {
+            getLogger().info(s);
+        }
+    }
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
         reloadConfig();
-        for (Enchantment e: Enchantment.values()) { getLogger().info(e.getName()); }
         getServer().getPluginManager().registerEvents(this, this);
     }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command,
+            String label, String[] args) {
+        if (args[0].equalsIgnoreCase("reload")) {
+            reloadConfig();
+            sender.sendMessage(ChatColor.GOLD + "[Scribe]" + ChatColor.GRAY + " Configuration Reloaded.");
+        }
+        return false;
+    }
+
     @EventHandler(ignoreCancelled=true, priority=EventPriority.HIGHEST)
     public void onInventoryClick(final InventoryClickEvent event) {
         getServer().getScheduler().runTaskLater(this, new Runnable() {
@@ -86,6 +105,7 @@ public class Scribe extends JavaPlugin implements Listener {
                     Player player = (Player) event.getWhoClicked();
                     if (getConfig().getBoolean("use-permissions")) {
                         if (!player.hasPermission("scribe.use")) {
+                            debug(player.getName() + " has no permission to use scribe.");
                             return;
                         }
                     }
@@ -95,6 +115,7 @@ public class Scribe extends JavaPlugin implements Listener {
                     net.minecraft.server.v1_5_R3.ItemStack nmsResult = ((CraftInventoryAnvil)ai).getResultInventory().getItem(0); 
                     ItemStack result = nmsResult == null ? null : CraftItemStack.asCraftMirror(nmsResult);  
                     if (first != null && first.getType().equals(Material.BOOK_AND_QUILL) && second != null && result == null) {
+                        debug("Setting Scribe result.");
                         ContainerAnvilInventory nmsInv = (ContainerAnvilInventory) ((CraftInventoryAnvil) ai).getInventory();
                         ItemStack resultStack = new ItemStack(Material.ENCHANTED_BOOK);
                         try {
