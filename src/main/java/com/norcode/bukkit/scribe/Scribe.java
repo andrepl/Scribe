@@ -57,9 +57,9 @@ public class Scribe extends JavaPlugin implements Listener {
                     if (cap == -1) { cap = lvl; }
                     if (lvl > cap) { lvl = cap; }
                     int cpl = getConfig().getInt("enchantment-cost-per-level." + e.getKey().getName(), 0);
-                    int tmpCost = getConfig().getInt("cost-per-enchantment", 0) + cpl;
-                    if (cost + tmpCost <= 40) {
-                        cost += cpl * lvl;
+                    int tmpCost = getConfig().getInt("cost-per-enchantment", 0) + (cpl * lvl);
+                    if (cost + tmpCost < 40) {
+                        cost += tmpCost;
                         enchantments.put(e.getKey(), lvl);
                     }
                 }
@@ -115,7 +115,7 @@ public class Scribe extends JavaPlugin implements Listener {
                     net.minecraft.server.v1_5_R3.ItemStack nmsResult = ((CraftInventoryAnvil)ai).getResultInventory().getItem(0); 
                     ItemStack result = nmsResult == null ? null : CraftItemStack.asCraftMirror(nmsResult);  
                     if (first != null && first.getType().equals(Material.BOOK_AND_QUILL) && second != null && result == null) {
-                        debug("Setting Scribe result.");
+                        
                         ContainerAnvilInventory nmsInv = (ContainerAnvilInventory) ((CraftInventoryAnvil) ai).getInventory();
                         ItemStack resultStack = new ItemStack(Material.ENCHANTED_BOOK);
                         try {
@@ -124,19 +124,20 @@ public class Scribe extends JavaPlugin implements Listener {
                             ContainerAnvil anvil = (ContainerAnvil) containerField.get(nmsInv);
                             float pct = (second.getType().getMaxDurability() - second.getDurability()) / second.getType().getMaxDurability();
                             if ((int) Math.floor(pct*100) > getConfig().getInt("max-durability", 100)) {
-                                anvil.a = 41;
+                                anvil.a = 40;
                                 String msg = getConfig().getString("messages.not-damaged-enough", "");
                                 if (!msg.equals("")) {
                                     player.sendMessage(msg);
                                 }
                             } else if ((int) Math.floor(pct*100) < getConfig().getInt("min-durability", 0)) {
-                                anvil.a = 41;
+                                anvil.a = 40;
                                 String msg = getConfig().getString("messages.too-damaged", "");
                                 if (!msg.equals("")) {
                                     player.sendMessage(msg);
                                 }
                             } else {
                                 ScribeResult scribeResult = new ScribeResult(second);
+                                debug("Setting Scribe result: " + scribeResult.getEnchantments());
                                 anvil.a = scribeResult.getCost(); 
                                 EnchantmentStorageMeta meta = ((EnchantmentStorageMeta)resultStack.getItemMeta());
                                 for (Map.Entry<Enchantment, Integer> entry: scribeResult.getEnchantments().entrySet()) {

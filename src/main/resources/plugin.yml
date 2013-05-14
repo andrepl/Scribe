@@ -1,6 +1,6 @@
 main: com.norcode.bukkit.scribe.Scribe
 author: metalhedd
-version: 0.0.2
+version: 0.0.3
 name: Scribe
 
 commands:
