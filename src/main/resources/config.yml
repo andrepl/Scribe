@@ -1,6 +1,7 @@
 use-permissions: true
 max-durability: 100
 min-durability: 0
+auto-update: true
 messages:
   not-damaged-enough: "Item is not damaged enough."
   too-damaged: "Item is too damaged." 

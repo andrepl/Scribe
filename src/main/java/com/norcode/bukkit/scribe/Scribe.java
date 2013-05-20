@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import net.h31ix.updater.Updater;
+import net.h31ix.updater.Updater.UpdateType;
 import net.minecraft.server.v1_5_R3.ContainerAnvil;
 import net.minecraft.server.v1_5_R3.ContainerAnvilInventory;
 import net.minecraft.server.v1_5_R3.EnchantmentManager;
@@ -31,6 +33,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -40,7 +43,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Scribe extends JavaPlugin implements Listener {
-
+    private Updater updater;
     private class ScribeResult {
         ItemStack stack;
         int cost = -1;
@@ -74,6 +77,18 @@ public class Scribe extends JavaPlugin implements Listener {
         }
     }
 
+
+    public void doUpdater() {
+        String autoUpdate = getConfig().getString("auto-update", "notify-only").toLowerCase();
+        if (autoUpdate.equals("true")) {
+            updater = new Updater(this, "scribe", this.getFile(), UpdateType.DEFAULT, true);
+        } else if (autoUpdate.equals("false")) {
+            getLogger().info("Auto-updater is disabled.  Skipping check.");
+        } else {
+            updater = new Updater(this, "scribe", this.getFile(), UpdateType.NO_DOWNLOAD, true);
+        }
+    }
+
     public void debug(String s) {
         if (getConfig().getBoolean("debug", false)) {
             getLogger().info(s);
@@ -83,7 +98,9 @@ public class Scribe extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        reloadConfig();
+        getConfig().options().copyDefaults(true);
+        saveConfig();
+        doUpdater();
         getServer().getPluginManager().registerEvents(this, this);
     }
 
@@ -97,6 +114,31 @@ public class Scribe extends JavaPlugin implements Listener {
         return false;
     }
 
+    @EventHandler(ignoreCancelled=true)
+    public void onPlayerLogin(PlayerLoginEvent event) {
+        if (event.getPlayer().hasPermission("scribe.admin")) {
+            final String playerName = event.getPlayer().getName();
+            getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
+                public void run() {
+                    Player player = getServer().getPlayer(playerName);
+                    if (player != null && player.isOnline()) {
+                        getLogger().info("Updater Result: " + updater.getResult());
+                        switch (updater.getResult()) {
+                        case UPDATE_AVAILABLE:
+                            player.sendMessage("A new version of Scribe is available at http://dev.bukkit.org/server-mods/scribe/");
+                            break;
+                        case SUCCESS:
+                            player.sendMessage("A new version of Scribe has been downloaded and will take effect when the server restarts.");
+                            break;
+                        default:
+                            // nothing
+                        }
+                    }
+                }
+            }, 20);
+        }
+    }
+    
     @EventHandler(ignoreCancelled=true, priority=EventPriority.HIGHEST)
     public void onInventoryClick(final InventoryClickEvent event) {
         getServer().getScheduler().runTaskLater(this, new Runnable() {
