@@ -1,7 +1,7 @@
-main: com.norcode.bukkit.scribe.Scribe
-author: metalhedd
-version: 0.1.0
-name: Scribe
+main: ${project.main}
+author: ${project.authors}
+version: ${project.version}
+name: ${project.name}
 
 commands:
   scribe reload:
