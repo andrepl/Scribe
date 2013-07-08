@@ -4,41 +4,31 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import net.h31ix.updater.Updater;
 import net.h31ix.updater.Updater.UpdateType;
-import net.minecraft.server.v1_5_R3.ContainerAnvil;
-import net.minecraft.server.v1_5_R3.ContainerAnvilInventory;
-import net.minecraft.server.v1_5_R3.EnchantmentManager;
+import net.minecraft.server.v1_6_R1.ContainerAnvil;
+import net.minecraft.server.v1_6_R1.ContainerAnvilInventory;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_5_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_5_R3.inventory.CraftInventoryAnvil;
-import org.bukkit.craftbukkit.v1_5_R3.inventory.CraftInventoryMerchant;
-import org.bukkit.craftbukkit.v1_5_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R1.inventory.CraftInventoryAnvil;
+import org.bukkit.craftbukkit.v1_6_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.inventory.AnvilInventory;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.MerchantInventory;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -153,7 +143,7 @@ public class Scribe extends JavaPlugin implements Listener {
                     AnvilInventory ai = (AnvilInventory) event.getInventory();
                     ItemStack first = ai.getItem(0);
                     ItemStack second = ai.getItem(1);
-                    net.minecraft.server.v1_5_R3.ItemStack nmsResult = ((CraftInventoryAnvil)ai).getResultInventory().getItem(0); 
+                    net.minecraft.server.v1_6_R1.ItemStack nmsResult = ((CraftInventoryAnvil)ai).getResultInventory().getItem(0); 
                     ItemStack result = nmsResult == null ? null : CraftItemStack.asCraftMirror(nmsResult);  
                     if (first != null && first.getType().equals(Material.BOOK_AND_QUILL) && second != null && result == null) {
                         
