@@ -32,14 +32,14 @@
     <repositories>
     <repository>
       <id>bukkit-releases-repo</id>
-      <url>http://repo.bukkit.org/content/repositories/releases/</url>
+      <url>http://repo.bukkit.org/content/repositories/snapshots/</url>
     </repository>
   </repositories>
   <dependencies>
     <dependency>
       <groupId>org.bukkit</groupId>
         <artifactId>craftbukkit</artifactId>
-        <version>1.6.1-R0.1</version>
+        <version>1.6.1-R0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
