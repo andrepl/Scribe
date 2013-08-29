@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.norcode.bukkit.scribe</groupId>
   <artifactId>Scribe</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <name>Scribe</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -32,14 +32,14 @@
     <repositories>
     <repository>
       <id>bukkit-releases-repo</id>
-      <url>http://repo.bukkit.org/content/repositories/snapshots/</url>
+      <url>http://repo.bukkit.org/content/groups/public/</url>
     </repository>
   </repositories>
   <dependencies>
     <dependency>
       <groupId>org.bukkit</groupId>
         <artifactId>craftbukkit</artifactId>
-        <version>1.6.2-R0.1-SNAPSHOT</version>
+        <version>1.6.2-R0.1</version>
     </dependency>
   </dependencies>
 </project>
