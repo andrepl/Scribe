@@ -106,25 +106,27 @@ public class Scribe extends JavaPlugin implements Listener {
 
     @EventHandler(ignoreCancelled=true)
     public void onPlayerLogin(PlayerLoginEvent event) {
-        if (event.getPlayer().hasPermission("scribe.admin")) {
-            final String playerName = event.getPlayer().getName();
-            getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
-                public void run() {
-                    Player player = getServer().getPlayer(playerName);
-                    if (player != null && player.isOnline()) {
-                        switch (updater.getResult()) {
-                        case UPDATE_AVAILABLE:
-                            player.sendMessage("A new version of Scribe is available at http://dev.bukkit.org/server-mods/scribe/");
-                            break;
-                        case SUCCESS:
-                            player.sendMessage("A new version of Scribe has been downloaded and will take effect when the server restarts.");
-                            break;
-                        default:
-                            // nothing
+        if (updater != null) {
+            if (event.getPlayer().hasPermission("scribe.admin")) {
+                final String playerName = event.getPlayer().getName();
+                getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
+                    public void run() {
+                        Player player = getServer().getPlayer(playerName);
+                        if (player != null && player.isOnline()) {
+                            switch (updater.getResult()) {
+                            case UPDATE_AVAILABLE:
+                                player.sendMessage("A new version of Scribe is available at http://dev.bukkit.org/server-mods/scribe/");
+                                break;
+                            case SUCCESS:
+                                player.sendMessage("A new version of Scribe has been downloaded and will take effect when the server restarts.");
+                                break;
+                            default:
+                                // nothing
+                            }
                         }
                     }
-                }
-            }, 20);
+                }, 20);
+            }
         }
     }
     
