@@ -5,6 +5,7 @@ name: ${project.name}
 
 commands:
   scribe:
+    usage: /<command> reload
     description: Reload Scribe config file.
     permission: scribe.admin
 
