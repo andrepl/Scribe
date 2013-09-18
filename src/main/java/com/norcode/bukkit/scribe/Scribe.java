@@ -97,9 +97,10 @@ public class Scribe extends JavaPlugin implements Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command command,
             String label, String[] args) {
-        if (args[0].equalsIgnoreCase("reload")) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
             reloadConfig();
             sender.sendMessage(ChatColor.GOLD + "[Scribe]" + ChatColor.GRAY + " Configuration Reloaded.");
+            return true;
         }
         return false;
     }
