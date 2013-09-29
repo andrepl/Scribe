@@ -21,6 +21,7 @@ public class ScribeAnvilInventory extends com.norcode.bukkit.scribe.api.ScribeAn
     public ScribeAnvilInventory(AnvilInventory inv) {
         super(inv);
         craftAnvil = (CraftInventoryAnvil) inv;
+        nmsInventory = (ContainerAnvilInventory) craftAnvil.getInventory();
         try {
             containerField = ContainerAnvilInventory.class.getDeclaredField("a");
             containerField.setAccessible(true);
@@ -30,7 +31,6 @@ public class ScribeAnvilInventory extends com.norcode.bukkit.scribe.api.ScribeAn
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        nmsInventory = (ContainerAnvilInventory) craftAnvil.getInventory();
     }
 
     @Override
@@ -45,7 +45,12 @@ public class ScribeAnvilInventory extends com.norcode.bukkit.scribe.api.ScribeAn
     }
 
     @Override
-    public void setCost(Player player, int cost) {
-        ((CraftPlayer) player).getHandle().setContainerData(container, 0, cost);
+    public void setCost(int cost) {
+        container.a = cost;
+    }
+
+    @Override
+    public void updatePlayer(Player player) {
+        ((CraftPlayer) player).getHandle().setContainerData(container, 0, container.a);
     }
 }

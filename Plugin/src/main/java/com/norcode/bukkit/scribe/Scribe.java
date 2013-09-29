@@ -155,17 +155,16 @@ public class Scribe extends JavaPlugin implements Listener {
                     ItemStack second = sInv.getSecond();
                     ItemStack result = sInv.getResult();
                     if (first != null && first.getType().equals(Material.BOOK_AND_QUILL) && second != null && result == null) {
-
                         ItemStack resultStack = new ItemStack(Material.ENCHANTED_BOOK);
                         float pct = (second.getType().getMaxDurability() - second.getDurability()) / second.getType().getMaxDurability();
                         if ((int) Math.floor(pct * 100) > getConfig().getInt("max-durability", 100)) {
-                            sInv.setCost(player, 40);
+                            sInv.setCost(40);
                             String msg = getConfig().getString("messages.not-damaged-enough", "");
                             if (!msg.equals("")) {
                                 player.sendMessage(msg);
                             }
                         } else if ((int) Math.floor(pct * 100) < getConfig().getInt("min-durability", 0)) {
-                            sInv.setCost(player, 40);
+                            sInv.setCost(40);
                             String msg = getConfig().getString("messages.too-damaged", "");
                             if (!msg.equals("")) {
                                 player.sendMessage(msg);
@@ -178,8 +177,9 @@ public class Scribe extends JavaPlugin implements Listener {
                                 meta.addStoredEnchant(entry.getKey(), entry.getValue(), true);
                             }
                             resultStack.setItemMeta(meta);
+                            sInv.setCost(scribeResult.getCost());
                             sInv.setResult(resultStack);
-                            sInv.setCost(player, scribeResult.getCost());
+                            sInv.updatePlayer(player);
                         }
                     }
                 }

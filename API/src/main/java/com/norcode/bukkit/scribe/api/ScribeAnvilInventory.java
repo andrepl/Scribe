@@ -44,9 +44,7 @@ public abstract class ScribeAnvilInventory {
         this.inv = inv;
     }
 
-    public ItemStack getResult() {
-        return inv.getItem(2);
-    };
+    public abstract ItemStack getResult();
 
     public ItemStack getFirst() {
         return inv.getItem(0);
@@ -65,10 +63,10 @@ public abstract class ScribeAnvilInventory {
         inv.setItem(1, stack);
     };
 
-    public void setResult(ItemStack stack) {
-        inv.setItem(2, stack);
-    };
+    public abstract void setResult(ItemStack stack);
 
-    public abstract void setCost(Player player, int cost);
+    public abstract void setCost(int cost);
+
+    public abstract void updatePlayer(Player player);
 
 }
