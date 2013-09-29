@@ -8,18 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.norcode.bukkit.scribe.api.ScribeAnvilInventory;
 import net.h31ix.updater.Updater;
 import net.h31ix.updater.Updater.UpdateType;
-import net.minecraft.server.v1_6_R2.ContainerAnvil;
-import net.minecraft.server.v1_6_R2.ContainerAnvilInventory;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftInventoryAnvil;
-import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,6 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Scribe extends JavaPlugin implements Listener {
     private Updater updater;
+
     private class ScribeResult {
         ItemStack stack;
         int cost = -1;
@@ -91,12 +88,20 @@ public class Scribe extends JavaPlugin implements Listener {
         getConfig().options().copyDefaults(true);
         saveConfig();
         doUpdater();
+        try {
+            ScribeAnvilInventory.initialize(getServer());
+        } catch (ClassNotFoundException e) {
+            this.getLogger().severe("Could not find support for this craftbukkit version " + getServer().getBukkitVersion() + ".");
+            this.getLogger().info("Check for updates at http://dev.bukktit.org/bukkit-plugins/scribe/");
+            this.setEnabled(false);
+        }
         getServer().getPluginManager().registerEvents(this, this);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command,
             String label, String[] args) {
+
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
             reloadConfig();
             sender.sendMessage(ChatColor.GOLD + "[Scribe]" + ChatColor.GRAY + " Configuration Reloaded.");
@@ -130,9 +135,10 @@ public class Scribe extends JavaPlugin implements Listener {
             }
         }
     }
-    
+
     @EventHandler(ignoreCancelled=true, priority=EventPriority.HIGHEST)
     public void onInventoryClick(final InventoryClickEvent event) {
+
         getServer().getScheduler().runTaskLater(this, new Runnable() {
             public void run() {
                 if (event.getInventory() instanceof AnvilInventory) {
@@ -144,51 +150,36 @@ public class Scribe extends JavaPlugin implements Listener {
                         }
                     }
                     AnvilInventory ai = (AnvilInventory) event.getInventory();
-                    ItemStack first = ai.getItem(0);
-                    ItemStack second = ai.getItem(1);
-                    net.minecraft.server.v1_6_R2.ItemStack nmsResult = ((CraftInventoryAnvil)ai).getResultInventory().getItem(0);
-                    ItemStack result = nmsResult == null ? null : CraftItemStack.asCraftMirror(nmsResult);  
+                    ScribeAnvilInventory sInv = ScribeAnvilInventory.wrap(ai);
+                    ItemStack first = sInv.getFirst();
+                    ItemStack second = sInv.getSecond();
+                    ItemStack result = sInv.getResult();
                     if (first != null && first.getType().equals(Material.BOOK_AND_QUILL) && second != null && result == null) {
-                        
-                        ContainerAnvilInventory nmsInv = (ContainerAnvilInventory) ((CraftInventoryAnvil) ai).getInventory();
+
                         ItemStack resultStack = new ItemStack(Material.ENCHANTED_BOOK);
-                        try {
-                            Field containerField = ContainerAnvilInventory.class.getDeclaredField("a");
-                            containerField.setAccessible(true);
-                            ContainerAnvil anvil = (ContainerAnvil) containerField.get(nmsInv);
-                            float pct = (second.getType().getMaxDurability() - second.getDurability()) / second.getType().getMaxDurability();
-                            if ((int) Math.floor(pct*100) > getConfig().getInt("max-durability", 100)) {
-                                anvil.a = 40;
-                                String msg = getConfig().getString("messages.not-damaged-enough", "");
-                                if (!msg.equals("")) {
-                                    player.sendMessage(msg);
-                                }
-                            } else if ((int) Math.floor(pct*100) < getConfig().getInt("min-durability", 0)) {
-                                anvil.a = 40;
-                                String msg = getConfig().getString("messages.too-damaged", "");
-                                if (!msg.equals("")) {
-                                    player.sendMessage(msg);
-                                }
-                            } else {
-                                ScribeResult scribeResult = new ScribeResult(second);
-                                debug("Setting Scribe result: " + scribeResult.getEnchantments());
-                                anvil.a = scribeResult.getCost(); 
-                                EnchantmentStorageMeta meta = ((EnchantmentStorageMeta)resultStack.getItemMeta());
-                                for (Map.Entry<Enchantment, Integer> entry: scribeResult.getEnchantments().entrySet()) {
-                                    meta.addStoredEnchant(entry.getKey(), entry.getValue(), true);
-                                }
-                                resultStack.setItemMeta(meta);
-                                ((CraftInventoryAnvil)ai).getResultInventory().setItem(0, CraftItemStack.asNMSCopy(resultStack));
-                                ((CraftPlayer) player).getHandle().setContainerData(anvil, 0, anvil.a);    
+                        float pct = (second.getType().getMaxDurability() - second.getDurability()) / second.getType().getMaxDurability();
+                        if ((int) Math.floor(pct * 100) > getConfig().getInt("max-durability", 100)) {
+                            sInv.setCost(player, 40);
+                            String msg = getConfig().getString("messages.not-damaged-enough", "");
+                            if (!msg.equals("")) {
+                                player.sendMessage(msg);
                             }
-                        } catch (NoSuchFieldException e) {
-                            e.printStackTrace();
-                        } catch (SecurityException e) {
-                            e.printStackTrace();
-                        } catch (IllegalArgumentException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
+                        } else if ((int) Math.floor(pct * 100) < getConfig().getInt("min-durability", 0)) {
+                            sInv.setCost(player, 40);
+                            String msg = getConfig().getString("messages.too-damaged", "");
+                            if (!msg.equals("")) {
+                                player.sendMessage(msg);
+                            }
+                        } else {
+                            ScribeResult scribeResult = new ScribeResult(second);
+                            debug("Setting Scribe result: " + scribeResult.getEnchantments());
+                            EnchantmentStorageMeta meta = ((EnchantmentStorageMeta) resultStack.getItemMeta());
+                            for (Map.Entry<Enchantment, Integer> entry : scribeResult.getEnchantments().entrySet()) {
+                                meta.addStoredEnchant(entry.getKey(), entry.getValue(), true);
+                            }
+                            resultStack.setItemMeta(meta);
+                            sInv.setResult(resultStack);
+                            sInv.setCost(player, scribeResult.getCost());
                         }
                     }
                 }

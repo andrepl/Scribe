@@ -5,3 +5,5 @@ dist/*
 *.class
 build/*
 target/*
+*/target/*
+*.iml

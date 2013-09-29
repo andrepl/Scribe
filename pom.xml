@@ -1,15 +1,19 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.norcode.bukkit.scribe</groupId>
-  <artifactId>Scribe</artifactId>
-  <version>0.1.4</version>
-  <name>Scribe</name>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.authors>metalhedd</project.authors>
-    <project.main>com.norcode.bukkit.scribe.Scribe</project.main>
-    <project.description>Transfer enchantments from items to books.</project.description>
-    </properties>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.norcode.bukkit.scribe</groupId>
+    <artifactId>Scribe-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>parent</version>
+    <modules>
+        <module>API</module>
+        <module>Plugin</module>
+        <module>v1_6_R2</module>
+        <module>v1_6_R3</module>
+    </modules>
     <build>
         <resources>
             <resource>
@@ -30,16 +34,9 @@
         </plugins>
     </build>
     <repositories>
-    <repository>
-      <id>bukkit-releases-repo</id>
-      <url>http://repo.bukkit.org/content/groups/public/</url>
-    </repository>
-  </repositories>
-  <dependencies>
-    <dependency>
-      <groupId>org.bukkit</groupId>
-        <artifactId>craftbukkit</artifactId>
-        <version>1.6.2-R0.1</version>
-    </dependency>
-  </dependencies>
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public</url>
+        </repository>
+    </repositories>
 </project>
