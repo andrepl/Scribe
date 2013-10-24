@@ -72,11 +72,11 @@ public class Scribe extends JavaPlugin implements Listener {
     public void doUpdater() {
         String autoUpdate = getConfig().getString("auto-update", "notify-only").toLowerCase();
         if (autoUpdate.equals("true")) {
-            updater = new Updater(this, 60420, this.getFile(), Updater.UpdateType.DEFAULT, true);
+            updater = new Updater(this, 57132, this.getFile(), Updater.UpdateType.DEFAULT, true);
         } else if (autoUpdate.equals("false")) {
             getLogger().info("Auto-updater is disabled.  Skipping check.");
         } else {
-            updater = new Updater(this, 60420, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
+            updater = new Updater(this, 57132, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
         }
     }
 
