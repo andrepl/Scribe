@@ -2,12 +2,15 @@ package com.norcode.bukkit.scribe.v1_6_R3;
 
 import net.minecraft.server.v1_6_R3.ContainerAnvil;
 import net.minecraft.server.v1_6_R3.ContainerAnvilInventory;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryAnvil;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Tree;
 
 import java.lang.reflect.Field;
 
@@ -32,6 +35,7 @@ public class ScribeAnvilInventory extends com.norcode.bukkit.scribe.api.ScribeAn
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override

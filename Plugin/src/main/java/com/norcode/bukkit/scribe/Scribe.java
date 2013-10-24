@@ -1,31 +1,35 @@
 package com.norcode.bukkit.scribe;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import com.norcode.bukkit.scribe.api.ScribeAnvilInventory;
-import net.h31ix.updater.Updater;
-import net.h31ix.updater.Updater.UpdateType;
 
+import net.gravitydevelopment.updater.Updater;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.inventory.AnvilInventory;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Scribe extends JavaPlugin implements Listener {
@@ -68,11 +72,11 @@ public class Scribe extends JavaPlugin implements Listener {
     public void doUpdater() {
         String autoUpdate = getConfig().getString("auto-update", "notify-only").toLowerCase();
         if (autoUpdate.equals("true")) {
-            updater = new Updater(this, "scribe", this.getFile(), UpdateType.DEFAULT, true);
+            updater = new Updater(this, 60420, this.getFile(), Updater.UpdateType.DEFAULT, true);
         } else if (autoUpdate.equals("false")) {
             getLogger().info("Auto-updater is disabled.  Skipping check.");
         } else {
-            updater = new Updater(this, "scribe", this.getFile(), UpdateType.NO_DOWNLOAD, true);
+            updater = new Updater(this, 60420, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
         }
     }
 
@@ -138,7 +142,6 @@ public class Scribe extends JavaPlugin implements Listener {
 
     @EventHandler(ignoreCancelled=true, priority=EventPriority.HIGHEST)
     public void onInventoryClick(final InventoryClickEvent event) {
-
         getServer().getScheduler().runTaskLater(this, new Runnable() {
             public void run() {
                 if (event.getInventory() instanceof AnvilInventory) {
