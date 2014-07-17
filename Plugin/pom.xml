@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <name>Scribe</name>
-    <version>0.2.3</version>
+    <version>0.2.4</version>
     <artifactId>Scribe</artifactId>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -121,6 +121,12 @@
             <groupId>com.norcode.bukkit.scribe</groupId>
             <artifactId>Scribe-v1_7_R3</artifactId>
             <version>v1_7_R3</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.norcode.bukkit.scribe</groupId>
+            <artifactId>Scribe-v1_7_R4</artifactId>
+            <version>v1_7_R4</version>
             <type>jar</type>
         </dependency>
         <dependency>
