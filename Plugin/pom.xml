@@ -130,6 +130,12 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>com.norcode.bukkit.scribe</groupId>
+            <artifactId>Scribe-v1_8_R1</artifactId>
+            <version>v1_8_R1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>LATEST</version>
