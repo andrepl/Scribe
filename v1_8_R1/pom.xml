@@ -31,20 +31,20 @@
             </plugin>
         </plugins>
     </build>
-    <artifactId>Scribe-v1_6_R3</artifactId>
-    <version>v1_6_R3</version>
+    <artifactId>Scribe-v1_8_R1</artifactId>
+    <version>v1_8_R1</version>
     <packaging>jar</packaging>
      <dependencies>
          <dependency>
              <groupId>org.bukkit</groupId>
              <artifactId>bukkit</artifactId>
-             <version>1.6.4-R1.0</version>
+             <version>1.8-R0.1</version>
              <type>jar</type>
          </dependency>
              <dependency>
                  <groupId>org.bukkit</groupId>
                  <artifactId>craftbukkit</artifactId>
-                 <version>1.6.4-R0.1</version>
+                 <version>1.8-R0.1</version>
                  <type>jar</type>
              </dependency>
              <dependency>
